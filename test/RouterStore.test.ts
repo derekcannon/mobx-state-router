@@ -63,6 +63,17 @@ const routes: Route[] = [
             throw new Error('Internal error');
         },
     },
+    {
+        name: 'slowRoute',
+        pattern: '/slow',
+        beforeEnter: async () => {
+            await new Promise((resolve) => setTimeout(resolve, 50));
+        },
+    },
+    {
+        name: 'fastRoute',
+        pattern: '/fast',
+    },
 ];
 
 const home = createRouterState('home');
@@ -256,5 +267,21 @@ describe('RouterStore', () => {
             .then(() =>
                 expect(routerStore.goToState(startLoop)).rejects.toThrow()
             );
+    });
+
+    test('a newer transition supersedes a slow in-flight transition', async () => {
+        const routerStore = new RouterStore(routes, notFound, {
+            initialState: home,
+        });
+
+        const slowPromise = routerStore.goTo('slowRoute');
+        await routerStore.goTo('fastRoute');
+
+        expect(routerStore.routerState.routeName).toBe('fastRoute');
+
+        await slowPromise;
+
+        // The slow transition should NOT have overwritten the fast one
+        expect(routerStore.routerState.routeName).toBe('fastRoute');
     });
 });
