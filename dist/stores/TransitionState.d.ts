@@ -1,0 +1,14 @@
+import { RouterState } from './RouterState';
+import { RouterStore } from './RouterStore';
+export declare class TransitionState {
+    private routerStore;
+    private readonly fromState;
+    private transitions;
+    private readonly fromRoute;
+    private readonly transitionsThreshold;
+    private readonly capturedTransitionId;
+    constructor(routerStore: RouterStore, fromState: RouterState);
+    resolve(toState: RouterState): Promise<RouterState>;
+    private isSuperseded;
+    private transition;
+}

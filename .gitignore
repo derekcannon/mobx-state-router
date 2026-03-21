@@ -1,7 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # Compiled output
-/dist
+# dist is committed so the fork can be used as a direct GitHub dependency
+# /dist
 /mobx-state-router-*
 
 # Dependencies
